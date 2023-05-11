@@ -3,10 +3,14 @@
 
 const customSecretKey = {
     node: {
-        // add cfg
+        PORT: 5000
     },
     db: {
-        // add cfg
+        host: 'localhost',
+        port: 5432,
+        database: 'postgres',
+        user: 'postgres',
+        password: '1234',
     },
     jwt: {
         TOKEN_KEY: 'exampleSecret'
