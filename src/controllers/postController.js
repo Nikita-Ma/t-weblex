@@ -7,10 +7,10 @@ const getPaginatedData = require("../utils/postPagination");
 // * @route POST post/create
 // * @access Private
 const createPost = async (req, res) => {
-    const {datePosts, dataPost, authorPost} = req.body
+    const {datePosts, dataPost} = req.body
     const addNewProduct = await db.query(
         'INSERT INTO post_data (p_date, p_data, p_author, user_data_id) VALUES ($1, $2, $3, $4)',
-        [datePosts, dataPost, authorPost, authorPost]
+        [datePosts, dataPost, req.user.u_name, req.user.u_name]
     )
 
     return res.json("successfully created")
@@ -26,7 +26,7 @@ const updatePost = async (req, res) => {
     const {datePosts, dataPost, idPost} = req.body
 
     const allProductList = await db.query('SELECT * FROM post_data WHERE p_id=$1', [idPost])
-    const dbPostAuthor = allProductList.rows.forEach(el =>  el.p_author)
+    const dbPostAuthor = allProductList.rows[0].p_author
 
     if (dbPostAuthor !== req.user.u_name) {
         return res.json(401)
@@ -46,6 +46,32 @@ const updatePost = async (req, res) => {
 }
 
 
+
+
+// * @desc Fetch delete
+// * @route DELETE post/delete
+// * @access Private
+const deletePost = async (req, res) => {
+    const {idPost} = req.body
+
+    const allProductList = await db.query('SELECT * FROM post_data WHERE p_id=$1', [idPost])
+    const dbPostAuthor = allProductList.rows[0].p_author
+
+    if (dbPostAuthor !== req.user.u_name) {
+        return res.json(401)
+    }
+
+    const deletePost = await db.query(
+        'DELETE FROM post_data WHERE p_id=$1',
+        [idPost]
+    )
+    if (!deletePost.rowCount) {
+        return res.sendStatus(404)
+    }
+
+
+    return res.json("successfully delete")
+}
 
 
 
@@ -72,7 +98,8 @@ const getPostPag = async (req, res) => {
 module.exports = {
     createPost,
     getPostPag,
-    updatePost
+    updatePost,
+    deletePost
 }
 
 
