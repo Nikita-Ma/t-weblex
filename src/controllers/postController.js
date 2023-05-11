@@ -18,14 +18,14 @@ const createPost = async (req, res) => {
 }
 
 // * @desc Fetch create a new user
-// * @route GET post/pagination?firstPag=()&lastPag=()
+// * @route GET post/pagination?page=()
 // * @access Private
 const getPostPag = async (req, res) => {
 
-    const {firstPag, lastPag} = req.query
+    const {page} = req.query
 
-    //
-    const resultPag = await getPaginatedData(firstPag, lastPag)
+
+    const resultPag = await getPaginatedData((page-1)*20, page*20)
         .then(data => {
             return data
         })
