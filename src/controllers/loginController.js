@@ -2,6 +2,11 @@ const config = require('../../customSecretKey')
 const db = require('../config/db')
 const jwt = require('jsonwebtoken')
 
+
+// * @desc Fetch login user
+// * @route POST /user/login
+// * @access Public
+
 const getLogin = async (req, res) => {
 
     const {u_name, u_password} = req.body

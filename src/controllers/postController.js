@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const db = require('../config/db')
 const getPaginatedData = require("../utils/postPagination");
+const getData = require('../utils/dateParser')
 
 
 // * @desc Fetch create a new post
@@ -9,7 +10,8 @@ const getPaginatedData = require("../utils/postPagination");
 // * @access Private
 const createPost = async (req, res) => {
 
-    const {datePosts, dataPost, image} = req.body
+    const {dataPost, image} = req.body
+    const datePosts = getData()
 
     if (!image) {
         const addNewProduct = await db.query(
@@ -49,7 +51,9 @@ const createPost = async (req, res) => {
 // * @route PUT post/update
 // * @access Private
 const updatePost = async (req, res) => {
-    const {datePosts, dataPost, idPost} = req.body
+
+    const {dataPost, idPost} = req.body
+    const datePosts = getData()
 
     const allProductList = await db.query('SELECT * FROM post_data WHERE p_id=$1', [idPost])
     const dbPostAuthor = allProductList.rows[0].p_author

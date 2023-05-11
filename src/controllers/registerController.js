@@ -4,7 +4,7 @@ const customEnv = require('../../customSecretKey.js')
 
 
 // * @desc Fetch create a new user
-// * @route POST /user
+// * @route POST /user/register
 // * @access Public
 
 const registerUser = async (req, res) => {
