@@ -29,7 +29,7 @@ const registerUser = async (req, res) => {
       [u_name, u_password]
     )
 
-    const token = jwt.sign({ user_id: u_name, u_password }, customEnv.jwt.TOKEN_KEY , {
+    const token = jwt.sign({ user_id: u_name,  u_password }, customEnv.jwt.TOKEN_KEY , {
       expiresIn: '1h',
     })
 

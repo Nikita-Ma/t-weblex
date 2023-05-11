@@ -7,6 +7,7 @@ const connectDB = require("./utils/connectDB");
 
 // require routes
 const registerRoutes = require('./routes/registerRoutes')
+const postRoutes = require('./routes/postRoutes')
 
 
 
@@ -16,8 +17,8 @@ connectDB()
 app.use(express.json())
 
 // routes
-
 app.use('/user', registerRoutes)
+app.use('/post', postRoutes)
 
 // use custom middlewares
 app.use(notFound)
