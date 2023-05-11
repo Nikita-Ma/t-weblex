@@ -6,7 +6,7 @@ const {notFound, errorHandler} = require("./middleware/errorMiddleware");
 const connectDB = require("./utils/connectDB");
 
 // require routes
-const registerRoutes = require('./routes/registerRoutes')
+const registerRoutes = require('./routes/authRoutes')
 const postRoutes = require('./routes/postRoutes')
 
 
@@ -18,6 +18,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 
 // routes
+app.use('/user', registerRoutes)
 app.use('/user', registerRoutes)
 app.use('/post', postRoutes)
 
