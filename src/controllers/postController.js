@@ -14,7 +14,7 @@ const createPost = async (req, res) => {
     const datePosts = getData()
 
     if (!image) {
-        const addNewProduct = await db.query(
+        await db.query(
             'INSERT INTO post_data (p_date, p_data, p_author, user_data_id) VALUES ($1, $2, $3, $4)',
             [datePosts, dataPost, req.user.u_name, req.user.u_name]
         )
@@ -26,10 +26,10 @@ const createPost = async (req, res) => {
     const base64Data = image.replace(/^data:image\/\w+;base64,/, '');
     const imageBuffer = Buffer.from(base64Data, 'base64');
 
-    const uniqueFilename = Date.now()+Math.floor(Math.random()*10) + '.png';
+    const uniqueFilename = Date.now() + Math.floor(Math.random() * 10) + '.png';
     // Select directory to save images on the server
     const savePath = path.join(__dirname, '../uploads', uniqueFilename);
-    const addNewProduct = await db.query(
+    await db.query(
         'INSERT INTO post_data (p_date, p_data, p_author, user_data_id) VALUES ($1, $2, $3, $4)',
         [datePosts, uniqueFilename, req.user.u_name, req.user.u_name]
     )
@@ -44,7 +44,6 @@ const createPost = async (req, res) => {
         res.send('successfully created images');
     });
 }
-
 
 
 // * @desc Fetch update
@@ -76,8 +75,6 @@ const updatePost = async (req, res) => {
 }
 
 
-
-
 // * @desc Fetch delete
 // * @route DELETE post/delete
 // * @access Private
@@ -102,7 +99,6 @@ const deletePost = async (req, res) => {
 
     return res.json("successfully delete")
 }
-
 
 
 // * @desc Fetch give post data
