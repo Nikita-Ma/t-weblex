@@ -1,5 +1,6 @@
+const fs = require('fs');
+const path = require('path');
 const db = require('../config/db')
-const customEnv = require('../../customSecretKey.js')
 const getPaginatedData = require("../utils/postPagination");
 
 
@@ -7,15 +8,40 @@ const getPaginatedData = require("../utils/postPagination");
 // * @route POST post/create
 // * @access Private
 const createPost = async (req, res) => {
-    const {datePosts, dataPost} = req.body
+
+    const {datePosts, dataPost, image} = req.body
+
+    if (!image) {
+        const addNewProduct = await db.query(
+            'INSERT INTO post_data (p_date, p_data, p_author, user_data_id) VALUES ($1, $2, $3, $4)',
+            [datePosts, dataPost, req.user.u_name, req.user.u_name]
+        )
+
+        return res.json("successfully created")
+    }
+
+
+    const base64Data = image.replace(/^data:image\/\w+;base64,/, '');
+    const imageBuffer = Buffer.from(base64Data, 'base64');
+
+    const uniqueFilename = Date.now()+Math.floor(Math.random()*10) + '.png';
+    // Select directory to save images on the server
+    const savePath = path.join(__dirname, '../uploads', uniqueFilename);
     const addNewProduct = await db.query(
         'INSERT INTO post_data (p_date, p_data, p_author, user_data_id) VALUES ($1, $2, $3, $4)',
-        [datePosts, dataPost, req.user.u_name, req.user.u_name]
+        [datePosts, uniqueFilename, req.user.u_name, req.user.u_name]
     )
 
-    return res.json("successfully created")
-}
+    // Save the image to the server
+    fs.writeFile(savePath, imageBuffer, (err) => {
+        if (err) {
+            console.error('Error saving image:', err);
+            return res.status(500).send('Error occurred while saving the image.');
+        }
 
+        res.send('successfully created images');
+    });
+}
 
 
 
@@ -76,14 +102,13 @@ const deletePost = async (req, res) => {
 
 
 // * @desc Fetch give post data
-// * @route GET post/pagination?page=()
+// * @route GET post/pagination?page=number
 // * @access Private
 const getPostPag = async (req, res) => {
 
     const {page} = req.query
 
-
-    const resultPag = await getPaginatedData((page-1)*20, page*20)
+    const resultPag = await getPaginatedData(page, 20)
         .then(data => {
             return data
         })

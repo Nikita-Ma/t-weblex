@@ -15,6 +15,7 @@ const postRoutes = require('./routes/postRoutes')
 connectDB()
 
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }));
 
 // routes
 app.use('/user', registerRoutes)
