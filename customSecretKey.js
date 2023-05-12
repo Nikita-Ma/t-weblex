@@ -7,14 +7,14 @@ const customSecretKey = {
     },
     db: {
         // I know it's very very bad!!!
-        host: 'dpg-chevnporddl9bukk7qb0-a.oregon-postgres.render.com',
-        port: 5432,
-        database: 'w_test',
-        user: 'w_test_user',
-        password: 'xnB3nJHQgWW5ZYIsbn6b3NpVsJJWsqso',
+        host: 'dpg-chevnporddl9bukk7qb0-a.oregon-postgres.render.com', // Your DB HOST
+        port: 5432, // Your DB PORT
+        database: 'w_test', // Your database
+        user: 'w_test_user', // Your user
+        password: 'xnB3nJHQgWW5ZYIsbn6b3NpVsJJWsqso', // Your password
     },
     jwt: {
-        TOKEN_KEY: 'exampleSecret'
+        TOKEN_KEY: 'exampleSecret' // Your secret token
     }
 }
 
