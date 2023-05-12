@@ -51,7 +51,7 @@ const createPost = async (req, res) => {
 // * @access Private
 const updatePost = async (req, res) => {
 
-    const {dataPost, idPost} = req.body
+    const {dataPost, idPost, image} = req.body
     const datePosts = getData()
 
     const allProductList = await db.query('SELECT * FROM post_data WHERE p_id=$1', [idPost])
@@ -61,14 +61,38 @@ const updatePost = async (req, res) => {
         return res.json(401)
     }
 
-    const updateSelectedPost = await db.query(
+    if (!image) {
+        const updateSelectedPost = await db.query(
+            'UPDATE post_data  SET p_data=$1, p_date = $3 WHERE p_id = $2',
+            [dataPost, idPost, datePosts]
+        )
+        return res.json("successfully updated")
+
+        if (!updateSelectedPost.rowCount) {
+            return res.sendStatus(404)
+        }
+    }
+
+    const base64Data = image.replace(/^data:image\/\w+;base64,/, '');
+    const imageBuffer = Buffer.from(base64Data, 'base64');
+
+    const uniqueFilename = Date.now() + Math.floor(Math.random() * 10) + '.png';
+    // Select directory to save images on the server
+    const savePath = path.join(__dirname, '../uploads', uniqueFilename);
+    await db.query(
         'UPDATE post_data  SET p_data=$1, p_date = $3 WHERE p_id = $2',
-        [dataPost, idPost, datePosts]
+        [uniqueFilename, idPost, datePosts]
     )
 
-    if (!updateSelectedPost.rowCount) {
-        return res.sendStatus(404)
-    }
+    // Save the image to the server
+    fs.writeFile(savePath, imageBuffer, (err) => {
+        if (err) {
+            console.error('Error saving image:', err);
+            return res.status(500).send('Error occurred while saving the image.');
+        }
+
+        res.send('successfully update images');
+    });
 
 
     return res.json("successfully updated")
