@@ -11,14 +11,16 @@ const postRoutes = require('./routes/postRoutes')
 const imageRouter = require('./routes/imageRoutes')
 
 
-
 // connect DB
 connectDB()
 
 app.use(express.json())
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({extended: true}));
 
 // routes
+app.get('/', (req, res) => {
+    res.send('Hi there!')
+})
 app.use('/user', registerRoutes)
 app.use('/post', postRoutes)
 app.use('/images', imageRouter)
@@ -28,7 +30,7 @@ app.use(notFound)
 
 app.use(errorHandler)
 
-const PORT = process.env. PORT || 5000
+const PORT = process.env.PORT || 5000
 
 
 app.listen(
