@@ -26,7 +26,7 @@ async function insertData() {
     } catch (error) {
         console.error('Error inserting data:', error);
     } finally {
-        db.end();
+        console.log('[Data] FINALLY DATA')
     }
 }
 
