@@ -1,5 +1,7 @@
 const express = require('express')
 const app = express()
+const serverless = require('serverless-http');
+const router = express.Router();
 
 // require middlewares
 const {notFound, errorHandler} = require("./middleware/errorMiddleware");
@@ -33,9 +35,5 @@ app.use(errorHandler)
 const PORT = process.env.PORT || 5000
 
 
-app.listen(
-    PORT,
-    console.log(
-        `[Server] Server running on ${PORT} PORT`
-    )
-)
+app.use('/.netlify/functions/api', router);
+module.exports.handler = serverless(app);
