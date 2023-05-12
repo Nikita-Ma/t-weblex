@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon ./src/server.js",
-    "deploy": "netlify deploy --prod"
+    "prod": "node ./build/bundle.js",
+    "build": "webpack --config webpack.config.js"
   },
   "repository": {
     "type": "git",
@@ -24,5 +25,13 @@
     "nodemon": "^2.0.22",
     "pg": "^8.10.0",
     "serverless-http": "^3.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.21.8",
+    "@babel/preset-env": "^7.21.5",
+    "babel-loader": "^9.1.2",
+    "webpack": "^5.82.1",
+    "webpack-cli": "^5.1.1",
+    "webpack-node-externals": "^3.0.0"
   }
 }

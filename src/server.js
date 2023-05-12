@@ -19,6 +19,8 @@ connectDB()
 app.use(express.json())
 app.use(express.urlencoded({extended: true}));
 
+// Use the router to handle requests to the `/.netlify/functions/api` path
+app.use(`/.netlify/functions/api`, router);
 // routes
 app.get('/', (req, res) => {
     res.send('Hi there!')
@@ -34,6 +36,10 @@ app.use(errorHandler)
 
 const PORT = process.env.PORT || 5000
 
+app.listen(PORT, () => {
+    console.log(`[SERVER] listen PORT ${PORT}`)
+})
 
-app.use('/.netlify/functions/api', router);
+// Export the app and the serverless function
+module.exports = app;
 module.exports.handler = serverless(app);
