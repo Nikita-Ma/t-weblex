@@ -1,6 +1,5 @@
 const express = require('express')
 const app = express()
-const serverless = require('serverless-http');
 const router = express.Router();
 
 // require middlewares
@@ -39,7 +38,3 @@ const PORT = process.env.PORT || 5000
 app.listen(PORT, () => {
     console.log(`[SERVER] listen PORT ${PORT}`)
 })
-
-// Export the app and the serverless function
-module.exports = app;
-module.exports.handler = serverless(app);
