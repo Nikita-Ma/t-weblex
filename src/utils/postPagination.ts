@@ -1,6 +1,6 @@
-const db = require('../config/db')
+import {pool} from "../config/db"
 
-async function getPaginatedData(pageNumber, pageSize) {
+export async function getPaginatedData(pageNumber:number, pageSize:number) {
 
     const offset = (pageNumber - 1) * pageSize;
 
@@ -14,7 +14,7 @@ async function getPaginatedData(pageNumber, pageSize) {
     const values = [offset, pageSize];
 
     try {
-        const result = await db.query(query, values);
+        const result = await pool.query(query, values);
         return result.rows;
     } catch (error) {
         console.error('Error executing query:', error);
@@ -22,4 +22,3 @@ async function getPaginatedData(pageNumber, pageSize) {
     }
 }
 
-module.exports = getPaginatedData

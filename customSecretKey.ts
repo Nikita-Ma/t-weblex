@@ -1,7 +1,7 @@
 
 // Config env files
 
-const customSecretKey = {
+export const customSecretKey = {
     node: {
         PORT: 5000
     },
@@ -18,4 +18,3 @@ const customSecretKey = {
     }
 }
 
-module.exports = customSecretKey

@@ -1,4 +1,4 @@
-function getFormattedDate() {
+export function getFormattedDate() {
     const currentDate = new Date();
     const day = currentDate.getDate();
     const month = currentDate.getMonth() + 1; // Months are zero-based
@@ -12,4 +12,3 @@ function getFormattedDate() {
     return `${formattedDay}.${formattedMonth}.${year}`;
 }
 
-module.exports = getFormattedDate

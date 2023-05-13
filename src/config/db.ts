@@ -1,9 +1,9 @@
-const config = require('../../customSecretKey')
+import {customSecretKey as config} from '../../customSecretKey'
 
-const Pool = require('pg').Pool
+import { Pool } from 'pg';
 
 
-const pool = new Pool({
+export const pool = new Pool({
     host: config.db.host,
     port: config.db.port,
     database: config.db.database,
@@ -11,4 +11,4 @@ const pool = new Pool({
     password: config.db.password,
     ssl: true
 })
-module.exports = pool
+

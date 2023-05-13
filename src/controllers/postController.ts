@@ -1,25 +1,29 @@
-const fs = require('fs');
-const path = require('path');
-const db = require('../config/db')
-const getPaginatedData = require("../utils/postPagination");
-const getData = require('../utils/dateParser')
+import fs from 'fs';
+import path from 'path';
+import {pool as db} from '../config/db'
+import {Request, Response} from "express";
+import {getPaginatedData} from "../utils/postPagination";
+import {getFormattedDate as getData} from '../utils/dateParser'
+import {JwtPayload} from "jsonwebtoken";
 
 
 // * @desc Fetch create a new post
 // * @route POST post/create
 // * @access Private
-const createPost = async (req, res) => {
+export const createPost = async (req: Request, res: Response): Promise<void> => {
 
     const {dataPost, image} = req.body
+    const user = req.user as JwtPayload
     const datePosts = getData()
 
     if (!image) {
         await db.query(
             'INSERT INTO post_data (p_date, p_data, p_author, user_data_id) VALUES ($1, $2, $3, $4)',
-            [datePosts, dataPost, req.user.u_name, req.user.u_name]
+            [datePosts, dataPost, user.u_name, user.u_name]
         )
 
-        return res.json("successfully created")
+        res.json("successfully created")
+        return Promise.resolve()
     }
 
 
@@ -31,17 +35,19 @@ const createPost = async (req, res) => {
     const savePath = path.join(__dirname, '../uploads', uniqueFilename);
     await db.query(
         'INSERT INTO post_data (p_date, p_data, p_author, user_data_id) VALUES ($1, $2, $3, $4)',
-        [datePosts, uniqueFilename, req.user.u_name, req.user.u_name]
+        [datePosts, uniqueFilename, user.u_name, user.u_name]
     )
 
     // Save the image to the server
     fs.writeFile(savePath, imageBuffer, (err) => {
         if (err) {
             console.error('Error saving image:', err);
-            return res.status(500).send('Error occurred while saving the image.');
+            res.status(500).send('Error occurred while saving the image.');
+            return Promise.resolve()
         }
 
         res.send('successfully created images');
+        return Promise.resolve()
     });
 }
 
@@ -49,16 +55,18 @@ const createPost = async (req, res) => {
 // * @desc Fetch update
 // * @route PUT post/update
 // * @access Private
-const updatePost = async (req, res) => {
+export const updatePost = async (req: Request, res: Response): Promise<void> => {
 
     const {dataPost, idPost, image} = req.body
+    const user = req.user as JwtPayload
     const datePosts = getData()
 
     const allProductList = await db.query('SELECT * FROM post_data WHERE p_id=$1', [idPost])
     const dbPostAuthor = allProductList.rows[0].p_author
 
-    if (dbPostAuthor !== req.user.u_name) {
-        return res.json(401)
+    if (dbPostAuthor !== user.u_name) {
+        res.json(401)
+        return Promise.resolve()
     }
 
     if (!image) {
@@ -66,10 +74,11 @@ const updatePost = async (req, res) => {
             'UPDATE post_data  SET p_data=$1, p_date = $3 WHERE p_id = $2',
             [dataPost, idPost, datePosts]
         )
-        return res.json("successfully updated")
-
+        res.json("successfully updated")
+        return Promise.resolve()
         if (!updateSelectedPost.rowCount) {
-            return res.sendStatus(404)
+            res.sendStatus(404)
+            return Promise.resolve()
         }
     }
 
@@ -92,24 +101,27 @@ const updatePost = async (req, res) => {
         }
 
         res.send('successfully update images');
+        return Promise.resolve()
     });
 
 
-    return res.json("successfully updated")
+    res.json("successfully updated")
+    return Promise.resolve()
 }
 
 
 // * @desc Fetch delete
 // * @route DELETE post/delete
 // * @access Private
-const deletePost = async (req, res) => {
+export const deletePost = async (req: Request, res: Response): Promise<void> => {
     const {idPost} = req.body
-
+    const user = req.user as JwtPayload
     const allProductList = await db.query('SELECT * FROM post_data WHERE p_id=$1', [idPost])
     const dbPostAuthor = allProductList.rows[0].p_author
 
-    if (dbPostAuthor !== req.user.u_name) {
-        return res.json(401)
+    if (dbPostAuthor !== user.u_name) {
+        res.json(401)
+        return Promise.resolve()
     }
 
     const deletePost = await db.query(
@@ -117,38 +129,37 @@ const deletePost = async (req, res) => {
         [idPost]
     )
     if (!deletePost.rowCount) {
-        return res.sendStatus(404)
+        res.sendStatus(404)
+        return Promise.resolve()
     }
 
 
-    return res.json("successfully delete")
+    res.json("successfully delete")
+    return Promise.resolve()
 }
 
 
 // * @desc Fetch give post data
 // * @route GET post/pagination?page=number
 // * @access Private
-const getPostPag = async (req, res) => {
+export const getPostPag = async (req: Request, res: Response): Promise<void> => {
 
     const {page} = req.query
+    const changeTypePage = Number(page)
 
-    const resultPag = await getPaginatedData(page, 20)
+    const resultPag = await getPaginatedData(changeTypePage, 19)
         .then(data => {
             return data
         })
         .catch(error => {
             console.error('Error retrieving data:', error);
+            return 'Some error!'
         });
 
-    return res.send(resultPag)
+    res.send(resultPag)
+    return Promise.resolve()
 }
 
 
-module.exports = {
-    createPost,
-    getPostPag,
-    updatePost,
-    deletePost
-}
 
 

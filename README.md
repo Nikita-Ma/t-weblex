@@ -4,6 +4,8 @@
 
 ### [API DOCS](https://documenter.getpostman.com/view/13759288/2s93ebUXEG) | [DEMO VIEW](https://w-test-1.onrender.com/)
 
+Project on JS [PROD] | Project on TS [DEV]
+
 ### Requirements
 
 * have node js >v.18
