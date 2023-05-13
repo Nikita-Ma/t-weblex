@@ -1,18 +1,21 @@
-const jwt = require('jsonwebtoken')
-const db = require('../config/db')
-const customEnv = require('../../customSecretKey.js')
+import {Response} from "express";
+
+import jwt from 'jsonwebtoken'
+import {pool as db} from '../config/db'
+import {customSecretKey as customEnv} from '../../customSecretKey'
 
 
 // * @desc Fetch create a new user
 // * @route POST /user/register
 // * @access Public
 
-const registerUser = async (req, res) => {
+export const registerUser = async (req: any, res: Response): Promise<void> => {
 
     try {
         const {u_name, u_password} = req.body
         if (!(u_name && u_password)) {
             res.status(400).send('Request all input')
+            return Promise.resolve()
         }
 
         const checkUser = await db.query(
@@ -21,7 +24,8 @@ const registerUser = async (req, res) => {
         )
 
         if (checkUser.rows.length) {
-            return res.send('User Already Exist. Please Login') // ! Not good from a security point of view
+            res.send('User Already Exist. Please Login') // ! Not good from a security point of view
+            return Promise.resolve()
         }
 
         await db.query(
@@ -35,9 +39,9 @@ const registerUser = async (req, res) => {
 
         res.set('Authorization', `Bearer ${token}`)
         res.status(201).json(token)
+        return Promise.resolve()
     } catch (e) {
         console.error(`Error ${e}`)
         process.exit(1)
     }
 }
-module.exports = registerUser

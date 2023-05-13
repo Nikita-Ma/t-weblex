@@ -1,14 +1,13 @@
-const pool = require('../config/db')
-const insertData = require("./insertData");
+import {pool} from "../config/db"
+import {insertData} from "./insertData";
 
-function connectDB() {
+export function connectDB(): void {
     pool
         .connect()
         .then(() => console.log('[DATABASE] Connected'))
         .then(() => insertData())
-        .catch((err) =>
+        .catch((err: Error) =>
             console.error('connection error', err.stack)
         )
 }
 
-module.exports = connectDB

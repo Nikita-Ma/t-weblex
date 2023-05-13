@@ -1,16 +1,16 @@
-const express = require('express')
+import express from 'express'
 const routes = express.Router()
 
-const verifyAuth = require('../middleware/authMiddleware')
-const {
+import {verifyToken as verifyAuth} from '../middleware/authMiddleware'
+
+import {
     createPost,
     getPostPag, updatePost, deletePost
-} = require('../controllers/postController')
+} from '../controllers/postController'
 
 routes.route('/create').post(verifyAuth, createPost)
 routes.route('/update').put(verifyAuth, updatePost)
 routes.route('/delete').delete(verifyAuth, deletePost)
 routes.route('/pagination').get(verifyAuth, getPostPag)
 
-module.exports = routes
-
+export default routes
