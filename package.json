@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "dev:ts": "nodemon --exec ts-node src/server.ts",
-    "prod": "node ./build/src/server.js",
-    "build": "tsc"
+    "prod": "node ./build/bundle.js",
+    "build": "webpack --config webpack.config.ts"
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,8 @@
   "dependencies": {
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
-    "pg": "^8.10.0"
+    "pg": "^8.10.0",
+    "ts-loader": "^9.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.21.8",
