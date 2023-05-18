@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "dev:ts": "nodemon --exec ts-node src/server.ts",
+    "dev": "nodemon --exec ts-node src/server.ts",
     "prod": "node ./build/bundle.js",
     "build": "webpack --config webpack.config.ts"
   },
