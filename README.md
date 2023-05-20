@@ -67,3 +67,4 @@ Well use
 --- 
 
 #### I have some ideas on how to improve the code
+#### JWT token should not get password
